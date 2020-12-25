@@ -1,6 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
 
+// Route files
+const bootcamps = require('./routes/bootcamps');
+// mount router onto single url
+
 // Load env vars by loading the config file we created in config/config.env
 // since we put it in a special location then within an object we need to specify that location
 dotenv.config({ path: './config/config.env' });
@@ -8,31 +12,11 @@ dotenv.config({ path: './config/config.env' });
 // Initialize app variable with express
 const app = express();
 
-// Adding routes
-// app.theHTTPmethodWeWant('the route path', function =>)
-// you can send through html and json
-// The path has v1 so users can still use the older version
-// e.g. "v1 will be depracated and you have this amount of time to update it to v2 etc..."
-app.get('/api/v1/bootcamps', (req, res) => {
-    // res.send('Hello from express');
-    res.status(200).json({ success: true, msg: 'Show all bootcamps' });
-});
-
-app.get('/api/v1/bootcamps/:id', (req, res) => {
-    res.status(200).json({ success: true, msg: `Show bootcamp ${req.params.id}` });
-});
-
-app.post('/api/v1/bootcamps', (req, res) => {
-    res.status(200).json({ success: true, msg: 'Create new bootcamp' });
-});
-
-app.put('/api/v1/bootcamps/:id', (req, res) => {
-    res.status(200).json({ success: true, msg: `Update bootcamp ${req.params.id}` });
-});
-
-app.delete('/api/v1/bootcamps/:id', (req, res) => {
-    res.status(200).json({ success: true, msg: `Delete bootcamp ${req.params.id}` });
-});
+// Mount routers
+// We want to connect this to the bootcamps file on line 5
+// we no longer need to include api/v1/bootcamps in our routes because on this
+// so we can go ahead and remove that from routes/bootcamp.js
+app.use('/api/v1/bootcamps', bootcamps);
 
 // If the first port isnt available then it will run on PORT 5000
 const PORT = process.env.PORT || 5000;
