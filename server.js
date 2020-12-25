@@ -1,7 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const logger = require('./middleware/logger');
-// We aren't using tis type of logger just an example of custom middleware
+const morgan = require('morgan');
 
 // Require the route files
 const bootcamps = require('./routes/bootcamps');
@@ -12,21 +11,12 @@ dotenv.config({ path: './config/config.env' });
 // Initialize app variable with express
 const app = express();
 
-// - Middleware is a function that has acces to the request/response cycle and runs during that cycle and you can set request variables.
-// so any request we make this function will run
-// Typically you wouldn't keep any middleware in server.js - keep as clean as possible
-// const logger = (req, res, next) => {
-//   // set a value on this request object and we can then access from
-//   // any route after this middleware
-//   console.log(
-//     `${req.method} ${req.protocol}://${req.get('host')}${req.originalUrl}`
-//   );
-//   next(); // You need to call this so it knows to move onto the next piece of middleware cycle
-// };
-// MOVED THE ABOVE TO middleware/logger.js
-
-// to use the middleware we run app.use
-app.use(logger);
+// Dev logging middleware morgan
+// I only want this to run when we are in the development environment
+// instead of using our own logger and this is simple
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
 // Mount routers from line 4
 app.use('/api/v1/bootcamps', bootcamps);
